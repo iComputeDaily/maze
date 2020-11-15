@@ -20,35 +20,19 @@ type maze struct {
 
 // Defines an edge as the border between 2 cells
 type edge struct {
-	cell1 uint32
-	cell2 uint32
+	cell1 int
+	cell2 int
 }
 
 // Initalizes a grid with all the vertecies and edges
 // BUG(iComputeDaily): later remove edge initalization
 func (maze *maze) init() error {
 	// Sets the maze size
-	maze.metadata.size.x = 27
-	maze.metadata.size.y = 10
+	maze.metadata.size.x = 4
+	maze.metadata.size.y = 5
 	
 	// Creates a new grid with the correct number of vertecies
 	maze.data.grid = graph.New(maze.metadata.size.x * maze.metadata.size.y)
-	
-// 	// Creates all horizontal edges
-// 	for y := 0; y < maze.metadata.size.y; y++ { // Loops over y values; top to bottom
-// 		for x := 0; x < maze.metadata.size.x - 1; x++ { // Loops over x values; left to right
-// 			// Connects the current cell to the cell to it's right
-// 			maze.data.grid.Add(x + (y * maze.metadata.size.y), x + (y * maze.metadata.size.x) + 1)
-// 		}
-// 	}
-// 	
-// 	// Creates all vertical edges
-// 	for x := 0; x < maze.metadata.size.x; x++ { // Loops over x values; left to right
-// 		for y := 0; y < maze.metadata.size.y - 1; y++ { // Loops over y values; top to bottom
-// 			// Connects the current cell to the cell bellow it
-// 			maze.data.grid.Add(x + (y * maze.metadata.size.x), x + ((y + 1) * maze.metadata.size.y))
-// 		}
-// 	}
 	
 	// debuging perposes
 	fmt.Println("grid is: ", maze.data.grid.String())
@@ -58,6 +42,40 @@ func (maze *maze) init() error {
 
 // Randomly genrates a maze
 func (maze *maze) generate() error {
+	// Alocate memory to the slices
+	maze.data.edgesList = make([]edge, 0, ((maze.metadata.size.x - 1) * maze.metadata.size.y) +
+		(maze.metadata.size.x * (maze.metadata.size.y - 1)))
+	maze.data.sets = make([]uint32, maze.metadata.size.x * maze.metadata.size.y)
+	
+	// Give all cells a uniqe cell id
+	for i := 0; i < (maze.metadata.size.x * maze.metadata.size.y); i++ {
+		maze.data.sets[i] = uint32(i)
+	}
+	
+	// Add all edges to the list
+	// Adds all horizontal edges
+	for y := 0; y < maze.metadata.size.y; y++ { // Loops over y values; top to bottom
+		for x := 0; x < maze.metadata.size.x - 1; x++ { // Loops over x values; left to right
+			// Adds the edge between the current cell and the cell to it's right
+			maze.data.edgesList = append(maze.data.edgesList, edge{
+				cell1: x + (y * maze.metadata.size.x),
+				cell2: x + ((y * maze.metadata.size.x) + 1)})
+		}
+	}
+	
+	// Adds all vertical edges
+	for x := 0; x < maze.metadata.size.x; x++ { // Loops over x values; left to right
+		for y := 0; y < maze.metadata.size.y - 1; y++ { // Loops over y values; top to bottom
+			// Adds the edge between the current cell and the cell bellow it
+			maze.data.edgesList = append(maze.data.edgesList, edge{
+				cell1: x + (y * maze.metadata.size.x),
+				cell2: x + ((y + 1) * maze.metadata.size.x)})
+		}
+	}
+	
+	// For debuging
+	fmt.Println("Edges:", maze.data.edgesList, "\n\nCell ids:", maze.data.sets)
+	
 	return nil
 }
 
