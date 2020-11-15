@@ -1,14 +1,16 @@
 package main
 
 import "fmt"
+import "math/rand"
 import "github.com/yourbasic/graph"
 
 // Defines one maze
 type maze struct {
 	data struct { // Holds the cell ids and edge list
 		grid *graph.Mutable // Holds a graph to represent borders of all the cells
-		sets []uint32 // Represents cell ids
+		sets []int // Represents cell ids
 		edgesList []edge // A list of all the edges
+		rand *rand.Rand
 	}
 	metadata struct {
 		size struct {
@@ -28,8 +30,8 @@ type edge struct {
 // BUG(iComputeDaily): later remove edge initalization
 func (maze *maze) init() error {
 	// Sets the maze size
-	maze.metadata.size.x = 4
-	maze.metadata.size.y = 5
+	maze.metadata.size.x = 25
+	maze.metadata.size.y = 25
 	
 	// Creates a new grid with the correct number of vertecies
 	maze.data.grid = graph.New(maze.metadata.size.x * maze.metadata.size.y)
@@ -37,19 +39,14 @@ func (maze *maze) init() error {
 	// debuging perposes
 	fmt.Println("grid is: ", maze.data.grid.String())
 	
-	return nil
-}
-
-// Randomly genrates a maze
-func (maze *maze) generate() error {
 	// Alocate memory to the slices
 	maze.data.edgesList = make([]edge, 0, ((maze.metadata.size.x - 1) * maze.metadata.size.y) +
-		(maze.metadata.size.x * (maze.metadata.size.y - 1)))
-	maze.data.sets = make([]uint32, maze.metadata.size.x * maze.metadata.size.y)
+	(maze.metadata.size.x * (maze.metadata.size.y - 1)))
+	maze.data.sets = make([]int, maze.metadata.size.x * maze.metadata.size.y)
 	
 	// Give all cells a uniqe cell id
 	for i := 0; i < (maze.metadata.size.x * maze.metadata.size.y); i++ {
-		maze.data.sets[i] = uint32(i)
+		maze.data.sets[i] = i
 	}
 	
 	// Add all edges to the list
@@ -75,6 +72,43 @@ func (maze *maze) generate() error {
 	
 	// For debuging
 	fmt.Println("Edges:", maze.data.edgesList, "\n\nCell ids:", maze.data.sets)
+	
+	// Randomizes the order of the slice of edges
+	rand.Shuffle(len(maze.data.edgesList), func(i, j int) {
+		maze.data.edgesList[i], maze.data.edgesList[j] =
+		maze.data.edgesList[j], maze.data.edgesList[i] })
+	
+	// For debuging
+	fmt.Println("Randomized edges:", maze.data.edgesList)
+	
+	return nil
+}
+
+// Randomly genrates a maze
+func (maze *maze) generate() error {
+	// Initalize the grid and other data structures
+	err := maze.init()
+	if err != nil {
+		fmt.Println("How did we get here?")
+	}
+	
+	// Generate the maze
+	for e := 0; e < len(maze.data.edgesList); e++ { // For each edge(from our randomized list)
+		// Check if the cells on either side of this edge are of the same set
+		if maze.data.sets[maze.data.edgesList[e].cell1] !=
+			maze.data.sets[maze.data.edgesList[e].cell2] {
+				// If not carve a path
+				maze.data.grid.Add(maze.data.edgesList[e].cell1, maze.data.edgesList[e].cell2)
+				
+				// And join the sets
+				for c := 0; c < len(maze.data.sets); c++ { // For every cell in the sets list
+					// If its index is the same as cell one change it to the index of cell 2
+					if maze.data.sets[c] == maze.data.sets[maze.data.edgesList[e].cell1] {
+						maze.data.sets[c] =maze.data.sets[maze.data.edgesList[e].cell2]
+					}
+				}
+			}
+	}
 	
 	return nil
 }

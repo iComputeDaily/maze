@@ -1,16 +1,16 @@
 package main
 
+import "time"
 import "fmt"
+import "math/rand"
 
 func main() {
 	var maze maze
 	
-	err := maze.init()
-	if err != nil {
-		fmt.Println("How did we get here?")
-	}
+	// Initalize the random number generator
+	rand.Seed(time.Now().UTC().UnixNano())
 	
-	err = maze.generate()
+	err := maze.generate()
 	if err != nil {
 		fmt.Println("How did we get here?")
 	}
