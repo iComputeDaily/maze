@@ -5,7 +5,7 @@ import "math/rand"
 import "github.com/yourbasic/graph"
 
 // Defines one maze
-type maze struct {
+type kruskalMaze struct {
 	data struct { // Holds the cell ids and edge list
 		grid *graph.Mutable // Holds a graph to represent borders of all the cells
 		sets []int // Represents cell ids
@@ -26,10 +26,10 @@ type edge struct {
 }
 
 // Initalizes a grid with all the vertecies and edges
-func (maze *maze) init() error {
+func (maze *kruskalMaze) init() error {
 	// Sets the maze size
-	maze.metadata.size.x = 25
-	maze.metadata.size.y = 25
+	maze.metadata.size.x = 10
+	maze.metadata.size.y = 10
 	
 	// Creates a new grid with the correct number of vertecies
 	maze.data.grid = graph.New(maze.metadata.size.x * maze.metadata.size.y)
@@ -68,22 +68,16 @@ func (maze *maze) init() error {
 		}
 	}
 	
-	// For debuging
-	fmt.Println("Edges:", maze.data.edgesList, "\n\nCell ids:", maze.data.sets)
-	
 	// Randomizes the order of the slice of edges
 	rand.Shuffle(len(maze.data.edgesList), func(i, j int) {
 		maze.data.edgesList[i], maze.data.edgesList[j] =
 		maze.data.edgesList[j], maze.data.edgesList[i] })
 	
-	// For debuging
-	fmt.Println("Randomized edges:", maze.data.edgesList)
-	
 	return nil
 }
 
 // Randomly genrates a maze
-func (maze *maze) generate() error {
+func (maze *kruskalMaze) generate() error {
 	// Initalize the grid and other data structures
 	err := maze.init()
 	if err != nil {
@@ -116,7 +110,7 @@ func (maze *maze) generate() error {
 }
 
 // Returns the maze as a string of ascii art
-func (maze *maze) stringify() (string, error) {
+func (maze *kruskalMaze) stringify() (string, error) {
 	var stringyMaze string
 	
 	// Draws the edges on the top of the maze
@@ -140,8 +134,13 @@ func (maze *maze) stringify() (string, error) {
 			horizontal := maze.data.grid.Edge(v, v + 1)
 			
 			if horizontal && vertical == true {
-				stringyMaze = stringyMaze + "  "
-			} else if horizontal == true {
+				// If the cell to the right and the cell below are connected
+				if maze.data.grid.Edge(v + 1, (v + 1) + maze.metadata.size.x) {
+					stringyMaze = stringyMaze + "  "
+				} else {
+					stringyMaze = stringyMaze + " _"
+				}
+				} else if horizontal == true {
 				stringyMaze = stringyMaze + "__"
 			} else if vertical == true {
 				stringyMaze = stringyMaze + " |"
