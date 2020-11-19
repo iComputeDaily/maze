@@ -10,7 +10,6 @@ type maze struct {
 		grid *graph.Mutable // Holds a graph to represent borders of all the cells
 		sets []int // Represents cell ids
 		edgesList []edge // A list of all the edges
-		rand *rand.Rand
 	}
 	metadata struct {
 		size struct {
@@ -27,7 +26,6 @@ type edge struct {
 }
 
 // Initalizes a grid with all the vertecies and edges
-// BUG(iComputeDaily): later remove edge initalization
 func (maze *maze) init() error {
 	// Sets the maze size
 	maze.metadata.size.x = 25
@@ -94,17 +92,21 @@ func (maze *maze) generate() error {
 	
 	// Generate the maze
 	for e := 0; e < len(maze.data.edgesList); e++ { // For each edge(from our randomized list)
-		// Check if the cells on either side of this edge are of the same set
+		// Check if the cells on either side of this edge are not of the same set
 		if maze.data.sets[maze.data.edgesList[e].cell1] !=
 			maze.data.sets[maze.data.edgesList[e].cell2] {
+				
 				// If not carve a path
 				maze.data.grid.Add(maze.data.edgesList[e].cell1, maze.data.edgesList[e].cell2)
+				
+				// Store the cell ids in variables to avoid canging the cell id that is matched for during the loop
+				cell1ID, cell2ID := maze.data.sets[maze.data.edgesList[e].cell1], maze.data.sets[maze.data.edgesList[e].cell2]
 				
 				// And join the sets
 				for c := 0; c < len(maze.data.sets); c++ { // For every cell in the sets list
 					// If its index is the same as cell one change it to the index of cell 2
-					if maze.data.sets[c] == maze.data.sets[maze.data.edgesList[e].cell1] {
-						maze.data.sets[c] =maze.data.sets[maze.data.edgesList[e].cell2]
+					if maze.data.sets[c] == cell1ID {
+						maze.data.sets[c] = cell2ID
 					}
 				}
 			}
