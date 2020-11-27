@@ -28,14 +28,11 @@ type edge struct {
 // Initalizes a grid with all the vertecies and edges
 func (maze *kruskalMaze) init() error {
 	// Sets the maze size
-	maze.metadata.size.x = 10
-	maze.metadata.size.y = 10
+	maze.metadata.size.x = 15
+	maze.metadata.size.y = 15
 	
 	// Creates a new grid with the correct number of vertecies
 	maze.data.grid = graph.New(maze.metadata.size.x * maze.metadata.size.y)
-	
-	// debuging perposes
-	fmt.Println("grid is: ", maze.data.grid.String())
 	
 	// Alocate memory to the slices
 	maze.data.edgesList = make([]edge, 0, ((maze.metadata.size.x - 1) * maze.metadata.size.y) +
