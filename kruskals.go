@@ -6,17 +6,12 @@ import "github.com/yourbasic/graph"
 
 // Defines one maze
 type kruskalMaze struct {
-	data struct { // Holds the cell ids and edge list
-		grid *graph.Mutable // Holds a graph to represent borders of all the cells
-		sets []int // Represents cell ids
-		edgesList []edge // A list of all the edges
-	}
-	metadata struct {
-		size struct {
-			x int
-			y int
-		}
-	}
+	grid *graph.Mutable // Holds a graph to represent borders of all the cells
+	sets []int // Represents cell ids
+	edgesList []edge // A list of all the edges
+	
+	height int
+	width int
 }
 
 // Defines an edge as the border between 2 cells
@@ -28,47 +23,47 @@ type edge struct {
 // Initalizes a grid with all the vertecies and edges
 func (maze *kruskalMaze) init() error {
 	// Sets the maze size
-	maze.metadata.size.x = 3
-	maze.metadata.size.y = 3
+	maze.width = 15
+	maze.height = 15
 	
 	// Creates a new grid with the correct number of vertecies
-	maze.data.grid = graph.New(maze.metadata.size.x * maze.metadata.size.y)
+	maze.grid = graph.New(maze.width * maze.height)
 	
 	// Alocate memory to the slices
-	maze.data.edgesList = make([]edge, 0, ((maze.metadata.size.x - 1) * maze.metadata.size.y) +
-	(maze.metadata.size.x * (maze.metadata.size.y - 1)))
-	maze.data.sets = make([]int, maze.metadata.size.x * maze.metadata.size.y)
+	maze.edgesList = make([]edge, 0, ((maze.width - 1) * maze.height) +
+	(maze.width * (maze.height - 1)))
+	maze.sets = make([]int, maze.width * maze.height)
 	
 	// Give all cells a uniqe cell id
-	for i := 0; i < (maze.metadata.size.x * maze.metadata.size.y); i++ {
-		maze.data.sets[i] = i
+	for i := 0; i < (maze.width * maze.height); i++ {
+		maze.sets[i] = i
 	}
 	
 	// Add all edges to the list
 	// Adds all horizontal edges
-	for y := 0; y < maze.metadata.size.y; y++ { // Loops over y values; top to bottom
-		for x := 0; x < maze.metadata.size.x - 1; x++ { // Loops over x values; left to right
+	for y := 0; y < maze.height; y++ { // Loops over y values; top to bottom
+		for x := 0; x < maze.width - 1; x++ { // Loops over x values; left to right
 			// Adds the edge between the current cell and the cell to it's right
-			maze.data.edgesList = append(maze.data.edgesList, edge{
-				cell1: x + (y * maze.metadata.size.x),
-				cell2: x + ((y * maze.metadata.size.x) + 1)})
+			maze.edgesList = append(maze.edgesList, edge{
+				cell1: x + (y * maze.width),
+				cell2: x + ((y * maze.width) + 1)})
 		}
 	}
 	
 	// Adds all vertical edges
-	for x := 0; x < maze.metadata.size.x; x++ { // Loops over x values; left to right
-		for y := 0; y < maze.metadata.size.y - 1; y++ { // Loops over y values; top to bottom
+	for x := 0; x < maze.width; x++ { // Loops over x values; left to right
+		for y := 0; y < maze.height - 1; y++ { // Loops over y values; top to bottom
 			// Adds the edge between the current cell and the cell bellow it
-			maze.data.edgesList = append(maze.data.edgesList, edge{
-				cell1: x + (y * maze.metadata.size.x),
-				cell2: x + ((y + 1) * maze.metadata.size.x)})
+			maze.edgesList = append(maze.edgesList, edge{
+				cell1: x + (y * maze.width),
+				cell2: x + ((y + 1) * maze.width)})
 		}
 	}
 	
 	// Randomizes the order of the slice of edges
-	rand.Shuffle(len(maze.data.edgesList), func(i, j int) {
-		maze.data.edgesList[i], maze.data.edgesList[j] =
-		maze.data.edgesList[j], maze.data.edgesList[i] })
+	rand.Shuffle(len(maze.edgesList), func(i, j int) {
+		maze.edgesList[i], maze.edgesList[j] =
+		maze.edgesList[j], maze.edgesList[i] })
 	
 	return nil
 }
@@ -82,28 +77,27 @@ func (maze *kruskalMaze) generate() error {
 	}
 	
 	// Generate the maze
-	for e := 0; e < len(maze.data.edgesList); e++ { // For each edge(from our randomized list)
+	for e := 0; e < len(maze.edgesList); e++ { // For each edge(from our randomized list)
 		// Check if the cells on either side of this edge are not of the same set
-		if maze.data.sets[maze.data.edgesList[e].cell1] !=
-			maze.data.sets[maze.data.edgesList[e].cell2] {
+		if maze.sets[maze.edgesList[e].cell1] !=
+			maze.sets[maze.edgesList[e].cell2] {
 				
 				// If not carve a path
-				maze.data.grid.Add(maze.data.edgesList[e].cell1, maze.data.edgesList[e].cell2)
+				maze.grid.Add(maze.edgesList[e].cell1, maze.edgesList[e].cell2)
 				
 				// Store the cell ids in variables to avoid canging the cell id that is matched for during the loop
-				cell1ID, cell2ID := maze.data.sets[maze.data.edgesList[e].cell1], maze.data.sets[maze.data.edgesList[e].cell2]
+				cell1, cell2 := maze.sets[maze.edgesList[e].cell1], maze.sets[maze.edgesList[e].cell2]
 				
 				// And join the sets
-				for c := 0; c < len(maze.data.sets); c++ { // For every cell in the sets list
+				for c := 0; c < len(maze.sets); c++ { // For every cell in the sets list
 					// If its index is the same as cell one change it to the index of cell 2
-					if maze.data.sets[c] == cell1ID {
-						maze.data.sets[c] = cell2ID
+					if maze.sets[c] == cell1 {
+						maze.sets[c] = cell2
 					}
 				}
 			}
 	}
 	
-	fmt.Println(maze.data.grid.String())
 	return nil
 }
 
@@ -112,28 +106,28 @@ func (maze *kruskalMaze) stringify() (string, error) {
 	var stringyMaze string
 	
 	// Draws the edges on the top of the maze
-	for v := 0; v < (maze.metadata.size.x * 2) + 1; v++ {
+	for v := 0; v < (maze.width * 2) + 1; v++ {
 		stringyMaze = stringyMaze + "_"
 	}
 	// Go to next line for next row
 	stringyMaze = stringyMaze + "\n"
 	
 	// Loop through all rows exept for last
-	for y := 0; y < (maze.metadata.size.y - 1); y++ {
+	for y := 0; y < (maze.height - 1); y++ {
 		// Print the left border
 		stringyMaze = stringyMaze + "|"
 		
 		// Loop through all cells in current row
-		for v := y * maze.metadata.size.x; v < ((y + 1) * maze.metadata.size.x); v++ {
+		for v := y * maze.width; v < ((y + 1) * maze.width); v++ {
 			// If the current cell and the cell below connect
-			vertical := maze.data.grid.Edge(v, v + maze.metadata.size.x)
+			vertical := maze.grid.Edge(v, v + maze.width)
 			
 			// If the current cell connects with the cell to the right
-			horizontal := maze.data.grid.Edge(v, v + 1)
+			horizontal := maze.grid.Edge(v, v + 1)
 			
 			if horizontal && vertical == true {
 				// If the cell to the right and the cell below are connected
-				if maze.data.grid.Edge(v + 1, (v + 1) + maze.metadata.size.x) {
+				if maze.grid.Edge(v + 1, (v + 1) + maze.width) {
 					stringyMaze = stringyMaze + "  "
 				} else {
 					stringyMaze = stringyMaze + " _"
@@ -155,9 +149,9 @@ func (maze *kruskalMaze) stringify() (string, error) {
 	stringyMaze = stringyMaze + "|"
 	
 	// Loop through all cells in current row
-	for v := (maze.metadata.size.y - 1) * maze.metadata.size.x; v < (maze.metadata.size.y * maze.metadata.size.x); v++ {
+	for v := (maze.height - 1) * maze.width; v < (maze.height * maze.width); v++ {
 		// If the current cell connects with the cell to the right
-		if maze.data.grid.Edge(v, v + 1) {
+		if maze.grid.Edge(v, v + 1) {
 			stringyMaze = stringyMaze + "__"
 		} else {
 			stringyMaze = stringyMaze + "_|"
