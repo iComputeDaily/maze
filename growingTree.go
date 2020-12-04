@@ -130,10 +130,7 @@ func (maze *gTreeMaze) generate()  error {
 			// And carve a path
 			maze.data.grid.Add(workingCell, cellToExtend)
 		}
-		
-		fmt.Println("The current working cell is: ", workingCell, "and the cell to extend is: ", cellToExtend, "The posibilities to expand were: ", posibleExpansions, "The Current Cell List is: ", maze.data.currentList, "\n")
 	}
-	fmt.Println(maze.data.grid.String())
 	
 	return nil
 }
