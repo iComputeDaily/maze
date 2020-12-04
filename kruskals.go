@@ -28,8 +28,8 @@ type edge struct {
 // Initalizes a grid with all the vertecies and edges
 func (maze *kruskalMaze) init() error {
 	// Sets the maze size
-	maze.metadata.size.x = 15
-	maze.metadata.size.y = 15
+	maze.metadata.size.x = 3
+	maze.metadata.size.y = 3
 	
 	// Creates a new grid with the correct number of vertecies
 	maze.data.grid = graph.New(maze.metadata.size.x * maze.metadata.size.y)
@@ -103,6 +103,7 @@ func (maze *kruskalMaze) generate() error {
 			}
 	}
 	
+	fmt.Println(maze.data.grid.String())
 	return nil
 }
 
@@ -112,7 +113,7 @@ func (maze *kruskalMaze) stringify() (string, error) {
 	
 	// Draws the edges on the top of the maze
 	for v := 0; v < (maze.metadata.size.x * 2) + 1; v++ {
-			stringyMaze = stringyMaze + "_"
+		stringyMaze = stringyMaze + "_"
 	}
 	// Go to next line for next row
 	stringyMaze = stringyMaze + "\n"
@@ -137,7 +138,7 @@ func (maze *kruskalMaze) stringify() (string, error) {
 				} else {
 					stringyMaze = stringyMaze + " _"
 				}
-				} else if horizontal == true {
+			} else if horizontal == true {
 				stringyMaze = stringyMaze + "__"
 			} else if vertical == true {
 				stringyMaze = stringyMaze + " |"
