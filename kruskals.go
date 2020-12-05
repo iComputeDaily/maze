@@ -1,5 +1,6 @@
 package main
 
+import "strings"
 import "fmt"
 import "math/rand"
 import "github.com/yourbasic/graph"
@@ -23,8 +24,8 @@ type edge struct {
 // Initalizes a grid with all the vertecies and edges
 func (maze *kruskalMaze) init() error {
 	// Sets the maze size
-	maze.width = 15
-	maze.height = 15
+	maze.width = 40
+	maze.height = 5000
 	
 	// Creates a new grid with the correct number of vertecies
 	maze.grid = graph.New(maze.width * maze.height)
@@ -103,7 +104,7 @@ func (maze *kruskalMaze) generate() error {
 
 // Returns the maze as a string of ascii art
 func (maze *kruskalMaze) stringify() (string, error) {
-	var stringyMaze string
+	var stringyMaze strings.Builder
 	
 	// Draws the edges on the top of the maze
 	for v := 0; v < (maze.width * 2) + 1; v++ {

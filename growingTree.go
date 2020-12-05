@@ -17,8 +17,8 @@ type gTreeMaze struct {
 // Initalizes data structures
 func (maze *gTreeMaze) init() error {
 	// Sets the maze size
-	maze.width = 15
-	maze.height = 15
+	maze.width = 40
+	maze.height = 5000
 	
 	// Creates a new grid with the correct number of vertecies
 	maze.grid = graph.New(maze.width * maze.height)

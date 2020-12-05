@@ -1,2 +1,4 @@
+github.com/pkg/profile v1.5.0 h1:042Buzk+NhDI+DeSAA62RwJL8VAuZUMQZUjCsRz1Mug=
+github.com/pkg/profile v1.5.0/go.mod h1:qBsxPvzyUincmltOk6iyRVxHYg4adc0OFOv72ZdLa18=
 github.com/yourbasic/graph v0.0.0-20170921192928-40eb135c0b26 h1:4u7nCRnWizT8R6xOP7cGaq+Ov0oBGkKMsLWZKiwDFas=
 github.com/yourbasic/graph v0.0.0-20170921192928-40eb135c0b26/go.mod h1:Rfzr+sqaDreiCaoQbFCu3sTXxeFq/9kXRuyOoSlGQHE=
