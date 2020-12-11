@@ -4,13 +4,13 @@ import "time"
 import "fmt"
 import "math/rand"
 
-type maze interface{
+type maze interface {
 	generate()  error
 	stringify() (string, error)
 }
 
 func main() {
-	var maze maze = &kruskalMaze{}
+	var maze maze = &gTreeMaze{}
 	
 	// Initalize the random number generator
 	rand.Seed(time.Now().UTC().UnixNano())

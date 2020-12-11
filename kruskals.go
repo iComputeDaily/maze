@@ -1,19 +1,18 @@
 package main
 
 import "github.com/theodesp/unionfind"
-import "strings"
 import "fmt"
 import "math/rand"
 import "github.com/yourbasic/graph"
 
 // Defines one maze
 type kruskalMaze struct {
-	grid *graph.Mutable // Holds a graph to represent borders of all the cells
-	sets *unionfind.UnionFind // Represents cell ids
-	edgesList []edge // A list of all the edges
+	// Generic atributes/functions
+	dummyMaze
 	
-	height int
-	width int
+	// Algorithum specific atributes/functions
+	sets *unionfind.UnionFind // Represents witch cells are connected to eachother
+	edgesList []edge // A list of all the edges
 }
 
 // Defines an edge as the border between 2 cells
@@ -93,65 +92,4 @@ func (maze *kruskalMaze) generate() error {
 	maze.edgesList = nil
 	
 	return nil
-}
-
-// Returns the maze as a string of ascii art
-func (maze *kruskalMaze) stringify() (string, error) {
-	// Create a string builder to hold the maze and preaclocate memory to avoid memory alocations
-	var stringyMaze strings.Builder
-	stringyMaze.Grow((maze.height + 1) * ((maze.width * 2) + 1))
-	
-	// Draws the edges on the top of the maze
-	for v := 0; v < (maze.width * 2) + 1; v++ {
-		_, _ = stringyMaze.WriteString("_")
-	}
-	// Go to next line for next row
-	_, _ = stringyMaze.WriteString("\n")
-	
-	// Loop through all rows exept for last
-	for y := 0; y < (maze.height - 1); y++ {
-		// Print the left border
-		_, _ = stringyMaze.WriteString("|")
-		
-		// Loop through all cells in current row
-		for v := y * maze.width; v < ((y + 1) * maze.width); v++ {
-			// If the current cell and the cell below connect
-			vertical := maze.grid.Edge(v, v + maze.width)
-			
-			// If the current cell connects with the cell to the right
-			horizontal := maze.grid.Edge(v, v + 1)
-			
-			if horizontal && vertical == true {
-				// If the cell to the right and the cell below are connected
-				if maze.grid.Edge(v + 1, (v + 1) + maze.width) {
-					_, _ = stringyMaze.WriteString("  ")
-				} else {
-					_, _ = stringyMaze.WriteString(" _")
-				}
-			} else if horizontal == true {
-				_, _ = stringyMaze.WriteString("__")
-			} else if vertical == true {
-				_, _ = stringyMaze.WriteString(" |")
-			} else {
-				_, _ = stringyMaze.WriteString("_|")
-			}
-		}
-		// Go to next line for next row
-		_, _ = stringyMaze.WriteString("\n")
-	}
-	
-	// For the last row
-	// Print the left border
-	_, _ = stringyMaze.WriteString("|")
-	
-	// Loop through all cells in current row
-	for v := (maze.height - 1) * maze.width; v < (maze.height * maze.width); v++ {
-		// If the current cell connects with the cell to the right
-		if maze.grid.Edge(v, v + 1) {
-			_, _ = stringyMaze.WriteString("__")
-		} else {
-			_, _ = stringyMaze.WriteString("_|")
-		}
-	}
-	return stringyMaze.String(), nil
 }
