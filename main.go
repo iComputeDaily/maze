@@ -10,7 +10,7 @@ type maze interface{
 }
 
 func main() {
-	var maze maze = &gTreeMaze{}
+	var maze maze = &kruskalMaze{}
 	
 	// Initalize the random number generator
 	rand.Seed(time.Now().UTC().UnixNano())

@@ -1,5 +1,6 @@
 package main
 
+import "github.com/theodesp/unionfind"
 import "strings"
 import "fmt"
 import "math/rand"
@@ -8,7 +9,7 @@ import "github.com/yourbasic/graph"
 // Defines one maze
 type kruskalMaze struct {
 	grid *graph.Mutable // Holds a graph to represent borders of all the cells
-	sets []int // Represents cell ids
+	sets *unionfind.UnionFind // Represents cell ids
 	edgesList []edge // A list of all the edges
 	
 	height int
@@ -30,15 +31,12 @@ func (maze *kruskalMaze) init() error {
 	// Creates a new grid with the correct number of vertecies
 	maze.grid = graph.New(maze.width * maze.height)
 	
-	// Alocate memory to the slices
+	// Alocate memory to the edges
 	maze.edgesList = make([]edge, 0, ((maze.width - 1) * maze.height) +
 	(maze.width * (maze.height - 1)))
-	maze.sets = make([]int, maze.width * maze.height)
 	
-	// Give all cells a uniqe cell id
-	for i := 0; i < (maze.width * maze.height); i++ {
-		maze.sets[i] = i
-	}
+	// Alocate the sets data structure
+	maze.sets = unionfind.New(maze.width * maze.height)
 	
 	// Add all edges to the list
 	// Adds all horizontal edges
@@ -80,22 +78,13 @@ func (maze *kruskalMaze) generate() error {
 	// Generate the maze
 	for e := 0; e < len(maze.edgesList); e++ { // For each edge(from our randomized list)
 		// Check if the cells on either side of this edge are not of the same set
-		if maze.sets[maze.edgesList[e].cell1] !=
-			maze.sets[maze.edgesList[e].cell2] {
+		if maze.sets.Connected(maze.edgesList[e].cell1, maze.edgesList[e].cell2) == false {
 				
 				// If not carve a path
 				maze.grid.Add(maze.edgesList[e].cell1, maze.edgesList[e].cell2)
 				
-				// Store the cell ids in variables to avoid canging the cell id that is matched for during the loop
-				cell1, cell2 := maze.sets[maze.edgesList[e].cell1], maze.sets[maze.edgesList[e].cell2]
-				
 				// And join the sets
-				for c := 0; c < len(maze.sets); c++ { // For every cell in the sets list
-					// If its index is the same as cell one change it to the index of cell 2
-					if maze.sets[c] == cell1 {
-						maze.sets[c] = cell2
-					}
-				}
+				maze.sets.Union(maze.edgesList[e].cell1, maze.edgesList[e].cell2)
 			}
 	}
 	
