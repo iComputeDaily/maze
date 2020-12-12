@@ -10,41 +10,37 @@ func TestMain(m *testing.M) {
 	// Initalize the random number generator
 	rand.Seed(time.Now().UTC().UnixNano())
 	
-	// prof := profile.Start(profile.CPUProfile)
-	
 	code := m.Run()
-	
-	// prof.Stop()
 	
 	os.Exit(code)
 }
 
 func BenchmarkGTree(b *testing.B) {
-	var maze maze = &gTreeMaze{}
+	var maze Maze = &GTreeMaze{}
 	
-	err := maze.generate()
+	err := maze.Generate(40, 5000)
 	if err != nil {
 		fmt.Println("How did we get here?")
 	}
 	
-	_, err = maze.stringify()
+	stringyMaze, err := maze.Stringify()
 	if err != nil {
 		fmt.Println("How did we get here?")
 	}
-	// fmt.Println(stringyMaze)
+	fmt.Println(stringyMaze)
 }
 
 func BenchmarkKruskals(b *testing.B) {
-	var maze maze = &kruskalMaze{}
+	var maze Maze = &KruskalMaze{}
 	
-	err := maze.generate()
+	err := maze.Generate(40, 5000)
 	if err != nil {
 		fmt.Println("How did we get here?")
 	}
 	
-	_, err = maze.stringify()
+	stringyMaze, err := maze.Stringify()
 	if err != nil {
 		fmt.Println("How did we get here?")
 	}
-	// fmt.Println(stringyMaze)
+	fmt.Println(stringyMaze)
 }
