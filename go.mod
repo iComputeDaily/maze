@@ -1,4 +1,4 @@
-module maze
+module github.com/iComputeDaily/maze
 
 go 1.15
 

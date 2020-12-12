@@ -1,13 +1,13 @@
-package main
+package maze
 
 import "fmt"
 import "math/rand"
 import "github.com/yourbasic/graph"
 
 // Defines one maze
-type gTreeMaze struct {
+type GTreeMaze struct {
 	// Generic atributes/functions
-	dummyMaze
+	DummyMaze
 	
 	// Algorithum specific atributes/functions
 	visited []bool // Tells weather or not a cell is visited
@@ -15,10 +15,10 @@ type gTreeMaze struct {
 }
 
 // Initalizes data structures
-func (maze *gTreeMaze) init() error {
+func (maze *GTreeMaze) init(width int, height int) error {
 	// Sets the maze size
-	maze.width = 40
-	maze.height = 5000
+	maze.width = width
+	maze.height = height
 	
 	// Creates a new grid with the correct number of vertecies
 	maze.grid = graph.New(maze.width * maze.height)
@@ -35,9 +35,9 @@ func (maze *gTreeMaze) init() error {
 	return nil
 }
 
-func (maze *gTreeMaze) generate()  error {
+func (maze *GTreeMaze) Generate(width int, height int)  error {
 	// Initalize data structure
-	err := maze.init()
+	err := maze.init(width, height)
 	if err != nil {
 		fmt.Println("How did we get here?")
 	}

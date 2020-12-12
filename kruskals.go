@@ -1,4 +1,4 @@
-package main
+package maze
 
 import "github.com/theodesp/unionfind"
 import "fmt"
@@ -6,9 +6,9 @@ import "math/rand"
 import "github.com/yourbasic/graph"
 
 // Defines one maze
-type kruskalMaze struct {
+type KruskalMaze struct {
 	// Generic atributes/functions
-	dummyMaze
+	DummyMaze
 	
 	// Algorithum specific atributes/functions
 	sets *unionfind.UnionFind // Represents witch cells are connected to eachother
@@ -22,10 +22,10 @@ type edge struct {
 }
 
 // Initalizes a grid with all the vertecies and edges
-func (maze *kruskalMaze) init() error {
+func (maze *KruskalMaze) init(width int, height int) error {
 	// Sets the maze size
-	maze.width = 40
-	maze.height = 5000
+	maze.width = width
+	maze.height = height
 	
 	// Creates a new grid with the correct number of vertecies
 	maze.grid = graph.New(maze.width * maze.height)
@@ -67,9 +67,9 @@ func (maze *kruskalMaze) init() error {
 }
 
 // Randomly genrates a maze
-func (maze *kruskalMaze) generate() error {
+func (maze *KruskalMaze) Generate(width int, height int) error {
 	// Initalize the grid and other data structures
-	err := maze.init()
+	err := maze.init(width, height)
 	if err != nil {
 		fmt.Println("How did we get here?")
 	}

@@ -1,26 +1,21 @@
-package main
+package maze
 
 import "time"
 import "fmt"
 import "math/rand"
 
-type maze interface {
-	generate()  error
-	stringify() (string, error)
-}
-
 func main() {
-	var maze maze = &gTreeMaze{}
+	var maze Maze = &GTreeMaze{}
 	
 	// Initalize the random number generator
 	rand.Seed(time.Now().UTC().UnixNano())
 	
-	err := maze.generate()
+	err := maze.Generate(3, 3)
 	if err != nil {
 		fmt.Println("How did we get here?")
 	}
 	
-	stringyMaze, err := maze.stringify()
+	stringyMaze, err := maze.Stringify()
 	if err != nil {
 		fmt.Println("How did we get here?")
 	}

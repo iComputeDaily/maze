@@ -1,10 +1,16 @@
-package main
+package maze
 
 import "strings"
 import "github.com/yourbasic/graph"
 
+// Repersents any maze
+type Maze interface {
+	Generate(width int, height int)  error
+	Stringify() (string, error)
+}
+
 // Represents a maze with no generation algoritum
-type dummyMaze struct {
+type DummyMaze struct {
 	grid *graph.Mutable // Represents the grid of squares
 	
 	// You can probobly guess
@@ -13,7 +19,7 @@ type dummyMaze struct {
 }
 
 // Returns the maze as a string of ascii art
-func (maze *dummyMaze) stringify() (string, error) {
+func (maze *DummyMaze) Stringify() (string, error) {
 	// Create a string builder for the maze and prealcoate memory to avoid memory alocations
 	var stringyMaze strings.Builder
 	stringyMaze.Grow((maze.height + 1) * ((maze.width * 2) + 1))
