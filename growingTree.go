@@ -1,6 +1,5 @@
 package maze
 
-import "fmt"
 import "math/rand"
 import "github.com/yourbasic/graph"
 
@@ -15,7 +14,7 @@ type GTreeMaze struct {
 }
 
 // Initalizes data structures
-func (maze *GTreeMaze) init(width int, height int) error {
+func (maze *GTreeMaze) init(width int, height int) {
 	// Sets the maze size
 	maze.width = width
 	maze.height = height
@@ -32,15 +31,12 @@ func (maze *GTreeMaze) init(width int, height int) error {
 		maze.visited[i] = false
 	}
 	
-	return nil
+	return
 }
 
-func (maze *GTreeMaze) Generate(width int, height int)  error {
+func (maze *GTreeMaze) Generate(width int, height int) {
 	// Initalize data structure
-	err := maze.init(width, height)
-	if err != nil {
-		fmt.Println("How did we get here?")
-	}
+	maze.init(width, height)
 	
 	// Add the first cell to the list
 	randCellId := rand.Intn(maze.width * maze.height)
@@ -131,5 +127,5 @@ func (maze *GTreeMaze) Generate(width int, height int)  error {
 	maze.visited = nil
 	maze.currentList = nil
 	
-	return nil
+	return
 }

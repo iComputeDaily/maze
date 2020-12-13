@@ -18,29 +18,19 @@ func TestMain(m *testing.M) {
 func BenchmarkGTree(b *testing.B) {
 	var maze Maze = &GTreeMaze{}
 	
-	err := maze.Generate(40, 5000)
-	if err != nil {
-		fmt.Println("How did we get here?")
-	}
+	maze.Generate(40, 5000)
 	
-	stringyMaze, err := maze.Stringify()
-	if err != nil {
-		fmt.Println("How did we get here?")
-	}
+	stringyMaze := maze.Stringify()
+	
 	fmt.Println(stringyMaze)
 }
 
 func BenchmarkKruskals(b *testing.B) {
 	var maze Maze = &KruskalMaze{}
 	
-	err := maze.Generate(40, 5000)
-	if err != nil {
-		fmt.Println("How did we get here?")
-	}
+	maze.Generate(40, 5000)
 	
-	stringyMaze, err := maze.Stringify()
-	if err != nil {
-		fmt.Println("How did we get here?")
-	}
+	stringyMaze := maze.Stringify()
+	
 	fmt.Println(stringyMaze)
 }

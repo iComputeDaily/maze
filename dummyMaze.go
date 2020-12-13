@@ -5,8 +5,8 @@ import "github.com/yourbasic/graph"
 
 // Repersents any maze
 type Maze interface {
-	Generate(width int, height int)  error
-	Stringify() (string, error)
+	Generate(width int, height int)
+	Stringify() string
 }
 
 // Represents a maze with no generation algoritum
@@ -19,7 +19,7 @@ type DummyMaze struct {
 }
 
 // Returns the maze as a string of ascii art
-func (maze *DummyMaze) Stringify() (string, error) {
+func (maze *DummyMaze) Stringify() string {
 	// Create a string builder for the maze and prealcoate memory to avoid memory alocations
 	var stringyMaze strings.Builder
 	stringyMaze.Grow((maze.height + 1) * ((maze.width * 2) + 1))
@@ -87,5 +87,5 @@ func (maze *DummyMaze) Stringify() (string, error) {
 			_, _ = stringyMaze.WriteString("_|")
 		}
 	}
-	return stringyMaze.String(), nil
+	return stringyMaze.String()
 }

@@ -1,7 +1,6 @@
 package maze
 
 import "github.com/theodesp/unionfind"
-import "fmt"
 import "math/rand"
 import "github.com/yourbasic/graph"
 
@@ -22,7 +21,7 @@ type edge struct {
 }
 
 // Initalizes a grid with all the vertecies and edges
-func (maze *KruskalMaze) init(width int, height int) error {
+func (maze *KruskalMaze) init(width int, height int) {
 	// Sets the maze size
 	maze.width = width
 	maze.height = height
@@ -63,16 +62,13 @@ func (maze *KruskalMaze) init(width int, height int) error {
 		maze.edgesList[i], maze.edgesList[j] =
 		maze.edgesList[j], maze.edgesList[i] })
 	
-	return nil
+	return
 }
 
 // Randomly genrates a maze
-func (maze *KruskalMaze) Generate(width int, height int) error {
+func (maze *KruskalMaze) Generate(width int, height int) {
 	// Initalize the grid and other data structures
-	err := maze.init(width, height)
-	if err != nil {
-		fmt.Println("How did we get here?")
-	}
+	maze.init(width, height)
 	
 	// Generate the maze
 	for e := 0; e < len(maze.edgesList); e++ { // For each edge(from our randomized list)
@@ -91,5 +87,5 @@ func (maze *KruskalMaze) Generate(width int, height int) error {
 	maze.sets = nil
 	maze.edgesList = nil
 	
-	return nil
+	return
 }
