@@ -18,7 +18,7 @@ func TestMain(m *testing.M) {
 func BenchmarkGTree(b *testing.B) {
 	var maze Maze = &GTreeMaze{}
 	
-	maze.Generate(40, 5000)
+	maze.Generate(10, 10)
 	
 	stringyMaze := maze.Stringify()
 	
@@ -28,7 +28,7 @@ func BenchmarkGTree(b *testing.B) {
 func BenchmarkKruskals(b *testing.B) {
 	var maze Maze = &KruskalMaze{}
 	
-	maze.Generate(40, 5000)
+	maze.Generate(3, 3)
 	
 	stringyMaze := maze.Stringify()
 	
