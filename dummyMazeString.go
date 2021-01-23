@@ -8,6 +8,7 @@ type Maze interface {
 	Generate(width int, height int)
 	Stringify() string
 	ReadMaze(inMaze string)
+	Loopify()
 	
 	SetPos(x, y int)
 

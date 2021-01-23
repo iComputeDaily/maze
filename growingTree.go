@@ -50,7 +50,7 @@ func (maze *GTreeMaze) Generate(width int, height int) {
 		// Holds the id of the cell curently being considered
 		var workingCell int
 		// Holds the ids of cells that the maze could be extended to
-		var posibleExpansions = make([]int, 0, 3) // BUG(iComputeDaily): optimize this value later
+		var posibleExpansions = make([]int, 0, 4)
 		// Holds the id of the cell in the currentList(just to speed things up by not having to search for it)
 		var currentListCellId int
 		// Holds the cell selected to extend the maze to
