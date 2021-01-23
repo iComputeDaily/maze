@@ -76,11 +76,16 @@ func (maze *DummyMaze) ReadMaze(inMaze string) {
 
 	mazeReader := strings.NewReader(realMaze)
 
-	// Calculate the width of the maze and return if failed
+	// Calculate the width and height of the maze and return if failed
 	if !maze.calcWidth(mazeReader) {
 		return
 	}
+	if !maze.calcHeight(mazeReader) {
+		return
+	}
 
-	maze.calcHeight(mazeReader)
+	// Reset position to end of underscored from start of maze
+	mazeReader.Seek(int64((2 * maze.width) + 1), 0)
+	
 	fmt.Println("height:", maze.height)
 }

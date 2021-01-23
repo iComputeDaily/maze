@@ -1,5 +1,11 @@
 package maze
 
+// Sets the players position, ignoring all obsticles
+func (maze *DummyMaze) SetPos(x, y int) {
+	maze.playerX = x
+	maze.playerY = y
+}
+
 // Move the player left, returns weather or not the move was sucsessfull
 func (maze *DummyMaze) MoveLeft() bool {
 	playerCell := maze.playerX + (maze.playerY * maze.width)

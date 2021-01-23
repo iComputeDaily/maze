@@ -9,6 +9,8 @@ type Maze interface {
 	Stringify() string
 	ReadMaze(inMaze string)
 	
+	SetPos(x, y int)
+
 	MoveLeft() bool
 	MoveUp() bool
 	MoveDown() bool
