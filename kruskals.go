@@ -76,7 +76,7 @@ func (maze *KruskalMaze) Generate(width int, height int) {
 		if maze.sets.Connected(maze.edgesList[e].cell1, maze.edgesList[e].cell2) == false {
 				
 				// If not carve a path
-				maze.grid.Add(maze.edgesList[e].cell1, maze.edgesList[e].cell2)
+				maze.grid.AddBoth(maze.edgesList[e].cell1, maze.edgesList[e].cell2)
 				
 				// And join the sets
 				maze.sets.Union(maze.edgesList[e].cell1, maze.edgesList[e].cell2)

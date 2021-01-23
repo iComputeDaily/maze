@@ -119,7 +119,7 @@ func (maze *GTreeMaze) Generate(width int, height int) {
 			// Mark it as visited
 			maze.visited[cellToExtend] = true
 			// And carve a path
-			maze.grid.Add(workingCell, cellToExtend)
+			maze.grid.AddBoth(workingCell, cellToExtend)
 		}
 	}
 	

@@ -35,11 +35,11 @@ func (maze *DummyMaze) printCurrentCell(stringyMaze *strings.Builder, v int, y i
 	var vertical bool
 	
 	// If the current cell and the cell below connect
-	if maze.grid.Edge(v, v + maze.width) || maze.grid.Edge(v + maze.width, v) == true {
+	if maze.grid.Edge(v, v + maze.width) {
 		vertical = true } else { vertical = false }
 	
 	// If the current cell connects with the cell to the right
-	if maze.grid.Edge(v, v + 1) || maze.grid.Edge(v + 1, v) == true {
+	if maze.grid.Edge(v, v + 1) {
 		horizontal = true } else { horizontal = false }
 	
 	// If the player is not on this square
@@ -47,7 +47,7 @@ func (maze *DummyMaze) printCurrentCell(stringyMaze *strings.Builder, v int, y i
 		switch {
 			case horizontal && vertical == true:
 				// If the cell to the right and the cell below the cell to the right are connected
-				if maze.grid.Edge(v + 1, (v + 1) + maze.width) || maze.grid.Edge((v + 1) + maze.width, v + 1) {
+				if maze.grid.Edge(v + 1, (v + 1) + maze.width) {
 					_, _ = stringyMaze.WriteString("  ")
 				} else {
 					_, _ = stringyMaze.WriteString(" _")
@@ -63,7 +63,7 @@ func (maze *DummyMaze) printCurrentCell(stringyMaze *strings.Builder, v int, y i
 		switch {
 			case horizontal && vertical == true:
 				// If the cell to the right and the cell below the cell to the right are connected
-				if maze.grid.Edge(v + 1, (v + 1) + maze.width) || maze.grid.Edge((v + 1) + maze.width, v + 1) {
+				if maze.grid.Edge(v + 1, (v + 1) + maze.width) {
 					_, _ = stringyMaze.WriteString("O ")
 				} else {
 					_, _ = stringyMaze.WriteString("O_")
@@ -113,14 +113,14 @@ func (maze *DummyMaze) Stringify() string {
 		// If the player is not on the current square
 		if (maze.playerY != (maze.height - 1)) || (maze.playerX != v - ((maze.height - 1) * maze.width)) {
 			// If the current cell connects with the cell to the right
-			if maze.grid.Edge(v, v + 1) || maze.grid.Edge(v + 1, v) {
+			if maze.grid.Edge(v, v + 1) {
 				_, _ = stringyMaze.WriteString("__")
 			} else {
 				_, _ = stringyMaze.WriteString("_|")
 			}
 		} else { // If the player is on the current square
 			// If the current cell connects with the cell to the right
-			if maze.grid.Edge(v, v + 1) || maze.grid.Edge(v + 1, v) {
+			if maze.grid.Edge(v, v + 1) {
 				_, _ = stringyMaze.WriteString("O_")
 			} else {
 				_, _ = stringyMaze.WriteString("O|")
